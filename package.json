@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",
+    "cartoon-avatar": "^1.0.2",
     "react": "^18.3.1",
     "react-avatar": "^5.0.3",
     "react-dom": "^18.3.1",

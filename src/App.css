@@ -20,7 +20,7 @@ html{
   border-radius: 5px;
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+
 }
 
 .inputBox input{
@@ -34,7 +34,7 @@ html{
 }
 
 .btnBlue{
-  background-color: #00AEEF;
+  background-color: #2764c0;
   color: #fff;
   padding: 10px 20px;
   border: none;
