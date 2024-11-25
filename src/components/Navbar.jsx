@@ -51,7 +51,7 @@ const Navbar = ({ isGridLayout, setIsGridLayout }) => {
         </div>
         <div className="links flex items-center gap-2">
           <Link to={"https://port-folio-aniket-ikhar.vercel.app/"}><span className='italic hover:text-[#2764c0] cursor-pointer'>About</span></Link>
-          
+          <span>|</span>
           <div onClick={() => { toggleClass(".dropDownNavbar", "hidden") }} className='rounded-full  cursor-pointer ml-2'>
             <img src={profile} alt="" className='w-[40px] rounded-full' />
           </div>
