@@ -103,26 +103,31 @@ const Home = () => {
   return (
     <>
       <Navbar isGridLayout={isGridLayout} setIsGridLayout={setIsGridLayout} />
-      <div className="flex items-center justify-between px-[100px] my-[40px]">
-        <h2 className="text-2xl">Hi, {userData ? userData.username : ""} 👋</h2>
-        <div className="flex items-center gap-1">
+      <div className="flex flex-col md:flex-row items-center justify-between px-4 md:px-[100px] my-[20px] md:my-[40px] gap-4">
+        <h2 className="text-lg md:text-2xl text-center md:text-left">
+          Hi 👋, {userData ? userData.username : ""}
+        </h2>
+        <div className="flex flex-col-reverse sm:flex-row justify-center items-center gap-4 sm:gap-2 w-full md:w-auto">
           {/* Search Bar */}
-          <div className="inputBox !w-[350px]">
+          <div className="inputBox w-full sm:w-[250px] md:w-[350px]">
             <input
               type="text"
-              placeholder="Search Here... !"
+              placeholder="Search Here...!"
               value={searchQuery} // Bind search input to searchQuery state
               onChange={(e) => setSearchQuery(e.target.value)} // Update searchQuery on input change
+              className="w-full px-2 py-1 border rounded-md text-sm"
             />
           </div>
-          <button
-            onClick={() => {
-              setIsCreateModelShow(true);
-            }}
-            className="btnBlue rounded-[5px] text-[20px] !p-[5px] !px-[10px]"
-          >
-            New Project
-          </button>
+          <div>
+            <button
+              onClick={() => {
+                setIsCreateModelShow(true);
+              }}
+              className="btnBlue rounded-[5px]  text-sm md:text-[15px] py-2 px-4"
+            >
+              New Project
+            </button>
+          </div>
         </div>
       </div>
 

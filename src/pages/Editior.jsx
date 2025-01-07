@@ -5,6 +5,8 @@ import { MdLightMode } from 'react-icons/md';
 import { AiOutlineExpandAlt } from "react-icons/ai";
 import { api_base_url } from '../helper';
 import { useParams } from 'react-router-dom';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 const Editior = () => {
   const [tab, setTab] = useState("html");
@@ -13,6 +15,7 @@ const Editior = () => {
   const [htmlCode, setHtmlCode] = useState("<h1>Hello world</h1>");
   const [cssCode, setCssCode] = useState("body { background-color: #f4f4f4; }");
   const [jsCode, setJsCode] = useState("// some comment");
+  const [data, setData] = useState({})
 
   // Extract projectID from URL using useParams
   const { projectID } = useParams();
@@ -64,6 +67,8 @@ const Editior = () => {
         setHtmlCode(data.project.htmlCode);
         setCssCode(data.project.cssCode);
         setJsCode(data.project.jsCode);
+        setData(data.project)
+        console.log(data);
       });
   }, [projectID]);
 
@@ -111,9 +116,24 @@ const Editior = () => {
   }, [projectID, htmlCode, cssCode, jsCode]);
 
 
+  const handleDownload = () => {
+    const zip = new JSZip();
+
+    // Add HTML, CSS, and JS files to the zip
+    zip.file("index.html", htmlCode);
+    zip.file("style.css", cssCode);
+    zip.file("script.js", jsCode);
+
+    // Generate the zip and trigger download
+    zip.generateAsync({ type: "blob" }).then((content) => {
+      saveAs(content, `${data.title}.zip`);
+    });
+  };
+
+
   return (
     <>
-      <EditiorNavbar />
+      <EditiorNavbar title={data.title} handledownload={handleDownload} />
       <div className="flex">
         <div className={`left w-[${isExpanded ? "100%" : "50%"}]`}>
           <div className="tabs flex items-center justify-between gap-2 w-full bg-[#1A1919] h-[50px] px-[40px]">
