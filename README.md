@@ -1,8 +1,35 @@
-# React + Vite
+# WriteCode
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+WriteCode is a web-based code editor that allows users to create, edit, and manage HTML, CSS, and JavaScript projects. It provides a user-friendly interface with features like project creation, code editing, and live preview.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- User authentication (Sign Up, Login)
+- Create, edit, and delete projects
+- Live preview of HTML, CSS, and JavaScript code
+- Light and dark mode support
+- Grid and list layout for project display
+- Download project as a ZIP file
+
+## Backend
+
+The backend is built using Node.js and Express, with MongoDB as the database.
+
+### Installation
+
+1. Navigate to the `WriteCode-Backend` directory:
+    ```sh
+    cd WriteCode-Backend
+    ```
+
+2. Install the dependencies:
+    ```sh
+    npm install
+    ```
+
+3. Start the server:
+    ```sh
+    npm start
+    ```
+
+    
