@@ -109,7 +109,7 @@ const Home = () => {
         </h2>
         <div className="flex flex-col-reverse sm:flex-row justify-center items-center gap-4 sm:gap-2 w-full md:w-auto">
           {/* Search Bar */}
-          <div className="inputBox w-full sm:w-[250px] md:w-[350px]">
+          <div style={{marginBottom: "0px"}} className="inputBox w-full sm:w-[250px] md:w-[350px]">
             <input
               type="text"
               placeholder="Search Here...!"
