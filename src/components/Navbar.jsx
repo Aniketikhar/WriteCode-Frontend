@@ -17,11 +17,12 @@ const Navbar = ({ isGridLayout, setIsGridLayout }) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch(api_base_url + "/getUserDetails", {
+    fetch(api_base_url + "/api/auth/me", {
       mode: "cors",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token"),
       },
       body: JSON.stringify({
         userId: localStorage.getItem("userId"),

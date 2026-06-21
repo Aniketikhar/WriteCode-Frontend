@@ -4,6 +4,7 @@ import ListCard from "../components/ListCard";
 import GridCard from "../components/GridCard";
 import { api_base_url } from "../helper";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Home = () => {
   const [data, setData] = useState(null);
@@ -22,13 +23,14 @@ const Home = () => {
 
   const createProj = (e) => {
     if (projTitle === "") {
-      alert("Please Enter Project Title");
+      toast.error("Please enter a project title");
     } else {
-      fetch(api_base_url + "/createProject", {
+      fetch(api_base_url + "/api/projects/create", {
         mode: "cors",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("token"),
         },
         body: JSON.stringify({
           title: projTitle,
@@ -40,21 +42,22 @@ const Home = () => {
           if (data.success) {
             setIsCreateModelShow(false);
             setProjTitle("");
-            alert("Project Created Successfully");
+            toast.success("Project created successfully!");
             navigate(`/editior/${data.projectId}`);
           } else {
-            alert("Something Went Wrong");
+            toast.error("Something went wrong");
           }
         });
     }
   };
 
   const getProj = () => {
-    fetch(api_base_url + "/getProjects", {
+    fetch(api_base_url + "/api/projects/all", {
       mode: "cors",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token"),
       },
       body: JSON.stringify({
         userId: localStorage.getItem("userId"),
@@ -78,11 +81,12 @@ const Home = () => {
   const [userError, setUserError] = useState("");
 
   useEffect(() => {
-    fetch(api_base_url + "/getUserDetails", {
+    fetch(api_base_url + "/api/auth/me", {
       mode: "cors",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token"),
       },
       body: JSON.stringify({
         userId: localStorage.getItem("userId"),
@@ -134,7 +138,7 @@ const Home = () => {
       {/* Project Display */}
       <div className="cards">
         {isGridLayout ? (
-          <div className="grid px-[100px]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 px-4 md:px-[100px]">
             {filteredData.length > 0 ? (
               filteredData.map((item, index) => (
                 <GridCard key={index} item={item} />
@@ -144,7 +148,7 @@ const Home = () => {
             )}
           </div>
         ) : (
-          <div className="list px-[100px]">
+          <div className="list px-4 md:px-[100px]">
             {filteredData.length > 0 ? (
               filteredData.map((item, index) => (
                 <ListCard key={index} item={item} />
@@ -159,7 +163,7 @@ const Home = () => {
       {/* Modal for Creating a New Project */}
       {isCreateModelShow && (
         <div className="createModelCon fixed top-0 left-0 right-0 bottom-0 w-screen h-screen bg-[rgb(0,0,0,0.1)] flex items-center justify-center">
-          <div className="createModel w-[25vw] h-[27vh] shadow-lg shadow-black/50 bg-[#141414] rounded-[10px] p-[20px]">
+          <div className="createModel w-[90vw] sm:w-[50vw] md:w-[30vw] h-auto shadow-lg shadow-black/50 bg-[#141414] rounded-[10px] p-[20px]">
             <h3 className="text-2xl">Create New Project</h3>
             <div className="inputBox !bg-[#202020] mt-4">
               <input

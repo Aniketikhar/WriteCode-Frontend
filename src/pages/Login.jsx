@@ -17,7 +17,7 @@ const Login = () => {
     setLoading(true);
 
     if (email && pwd) {
-      fetch(api_base_url + "/login", {
+      fetch(api_base_url + "/api/auth/login", {
         mode: "cors",
         method: "POST",
         headers: {
@@ -100,7 +100,7 @@ const Login = () => {
 
       <div className="w-screen min-h-screen flex flex-col md:flex-row gap-4">
         <div className="flex-1 flex flex-col items-center justify-center">
-          <div className="w-[70%]">
+          <div className="w-[85%] sm:w-[70%]">
             <h1 className="text-[25px] cursor-pointer font-bold">
               Write<span className="text-[#2764c0]">Code</span>
             </h1>

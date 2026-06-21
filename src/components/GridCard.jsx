@@ -2,10 +2,35 @@ import React, { useState } from 'react'
 import deleteImg from "../images/delete.png"
 import codeImg from "../images/code.png" 
 import { useNavigate } from 'react-router-dom';
+import { api_base_url } from '../helper';
+import toast from "react-hot-toast";
 
 const GridCard = ({item}) => {
   const [isDeleteModelShow, setIsDeleteModelShow] = useState(false);
   const navigate = useNavigate();
+
+  const deleteProj = (id) => {
+    fetch(api_base_url + "/api/projects/delete",{
+      mode: "cors",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      },
+      body: JSON.stringify({
+        progId: id,
+        userId: localStorage.getItem("userId")
+      })
+    }).then(res=>res.json()).then(data=>{
+      if(data.success){
+        setIsDeleteModelShow(false)
+        window.location.reload()
+      }else{
+        toast.error(data.message)
+        setIsDeleteModelShow(false)
+      }
+    })
+  }
 
   return (
     <>
@@ -22,11 +47,11 @@ const GridCard = ({item}) => {
 
       {
         isDeleteModelShow ? <div className="model fixed top-0 left-0 w-screen h-screen bg-[rgba(0,0,0,0.1)] flex justify-center items-center flex-col">
-          <div className="mainModel w-[25vw] h-[25vh] bg-[#141414] rounded-lg p-[20px]">
+          <div className="mainModel w-[85vw] sm:w-[50vw] md:w-[25vw] h-auto bg-[#141414] rounded-lg p-[20px]">
             <h3 className='text-3xl'>Do you want to delete <br />
               this project</h3>
             <div className='flex w-full mt-5 items-center gap-[10px]'>
-              <button className='p-[10px] rounded-lg bg-[#FF4343] text-white cursor-pointer min-w-[49%]'>Delete</button>
+              <button onClick={()=>{deleteProj(item._id)}} className='p-[10px] rounded-lg bg-[#FF4343] text-white cursor-pointer min-w-[49%]'>Delete</button>
               <button onClick={()=>{setIsDeleteModelShow(false)}} className='p-[10px] rounded-lg bg-[#1A1919] text-white cursor-pointer min-w-[49%]'>Cancel</button>
             </div>
           </div>

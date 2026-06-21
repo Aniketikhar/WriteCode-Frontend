@@ -3,6 +3,7 @@ import logo from "../images/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import image from "../images/login-signup.jpg";
 import { api_base_url } from "../helper";
+import toast from "react-hot-toast";
 
 const SignUp = () => {
   const [username, setUsername] = useState("");
@@ -18,7 +19,7 @@ const SignUp = () => {
     e.preventDefault();
     setLoading(true);
     if (username && name && email && pwd) {
-      fetch(api_base_url + "/signUp", {
+      fetch(api_base_url + "/api/auth/signup", {
         mode: "cors",
         method: "POST",
         headers: {
@@ -35,7 +36,7 @@ const SignUp = () => {
         .then((data) => {
           if (data.success === true) {
             setLoading(false);
-            alert("Account created successfully");
+            toast.success("Account created! Please login.");
             navigate("/login");
           } else {
             setLoading(false);
@@ -84,7 +85,7 @@ const SignUp = () => {
 
       <div className="w-screen min-h-screen flex flex-col md:flex-row gap-4">
         <div className="flex-1 flex flex-col items-center justify-center">
-          <div className="w-[70%]">
+          <div className="w-[85%] sm:w-[70%]">
             <h1 className="text-[25px] cursor-pointer font-bold">
               Write<span className="text-[#2764c0]">Code</span>
             </h1>

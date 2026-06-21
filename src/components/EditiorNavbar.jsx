@@ -5,7 +5,7 @@ import { FiDownload, FiSave } from "react-icons/fi";
 const EditiorNavbar = ({ title, handledownload, saveProject }) => {
   return (
     <div className="bg-[#141414]">
-      <div className="EditiorNavbar flex items-center justify-between container mx-auto h-[80px] ">
+      <div className="EditiorNavbar flex items-center justify-between container mx-auto h-[80px] px-4">
         <div className="logo ms-2">
           <a href="/">
             <h1 className="text-[25px] cursor-pointer font-bold">
