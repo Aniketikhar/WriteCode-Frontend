@@ -2,26 +2,17 @@ import React, { useState } from 'react'
 import deleteImg from "../images/delete.png"
 import codeImg from "../images/code.png" 
 import { useNavigate } from 'react-router-dom';
-import { api_base_url } from '../helper';
+import api from '../api';
 import toast from "react-hot-toast";
 
 const GridCard = ({item}) => {
   const [isDeleteModelShow, setIsDeleteModelShow] = useState(false);
   const navigate = useNavigate();
 
-  const deleteProj = (id) => {
-    fetch(api_base_url + "/api/projects/delete",{
-      mode: "cors",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + localStorage.getItem("token")
-      },
-      body: JSON.stringify({
-        progId: id,
-        userId: localStorage.getItem("userId")
-      })
-    }).then(res=>res.json()).then(data=>{
+  const deleteProj = async (id) => {
+    try {
+      const res = await api.post("/api/projects/delete", { projId: id });
+      const data = await res.json();
       if(data.success){
         setIsDeleteModelShow(false)
         window.location.reload()
@@ -29,7 +20,10 @@ const GridCard = ({item}) => {
         toast.error(data.message)
         setIsDeleteModelShow(false)
       }
-    })
+    } catch {
+      toast.error("Failed to delete project")
+      setIsDeleteModelShow(false)
+    }
   }
 
   return (

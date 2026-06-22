@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import ListCard from "../components/ListCard";
 import GridCard from "../components/GridCard";
-import { api_base_url } from "../helper";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import api from "../api";
 
 const Home = () => {
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
-  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [searchQuery, setSearchQuery] = useState("");
   const [projTitle, setProjTitle] = useState("");
   const navigate = useNavigate();
   const [isCreateModelShow, setIsCreateModelShow] = useState(false);
@@ -17,60 +17,45 @@ const Home = () => {
   // Filter data based on search query
   const filteredData = data
     ? data.filter(
-        (item) => item.title.toLowerCase().includes(searchQuery.toLowerCase()) // Case insensitive filtering
+        (item) => item.title.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
 
-  const createProj = (e) => {
+  const createProj = async () => {
     if (projTitle === "") {
       toast.error("Please enter a project title");
     } else {
-      fetch(api_base_url + "/api/projects/create", {
-        mode: "cors",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + localStorage.getItem("token"),
-        },
-        body: JSON.stringify({
+      try {
+        const res = await api.post("/api/projects/create", {
           title: projTitle,
-          userId: localStorage.getItem("userId"),
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            setIsCreateModelShow(false);
-            setProjTitle("");
-            toast.success("Project created successfully!");
-            navigate(`/editor/${data.projectId}`);
-          } else {
-            toast.error("Something went wrong");
-          }
         });
+        const data = await res.json();
+        if (data.success) {
+          setIsCreateModelShow(false);
+          setProjTitle("");
+          toast.success("Project created successfully!");
+          navigate(`/editor/${data.projectId}`);
+        } else {
+          toast.error("Something went wrong");
+        }
+      } catch {
+        toast.error("Network error. Please try again.");
+      }
     }
   };
 
-  const getProj = () => {
-    fetch(api_base_url + "/api/projects/all", {
-      mode: "cors",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        userId: localStorage.getItem("userId"),
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setData(data.projects);
-        } else {
-          setError(data.message);
-        }
-      });
+  const getProj = async () => {
+    try {
+      const res = await api.post("/api/projects/all");
+      const data = await res.json();
+      if (data.success) {
+        setData(data.projects);
+      } else {
+        setError(data.message);
+      }
+    } catch {
+      setError("Failed to load projects");
+    }
   };
 
   useEffect(() => {
@@ -78,35 +63,27 @@ const Home = () => {
   }, []);
 
   const [userData, setUserData] = useState(null);
-  const [userError, setUserError] = useState("");
 
   useEffect(() => {
-    fetch(api_base_url + "/api/auth/me", {
-      mode: "cors",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        userId: localStorage.getItem("userId"),
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchUser = async () => {
+      try {
+        const res = await api.post("/api/auth/me");
+        const data = await res.json();
         if (data.success) {
           setUserData(data.user);
-        } else {
-          setUserError(data.message);
         }
-      });
+      } catch {
+        // User details failed to load — non-critical
+      }
+    };
+    fetchUser();
   }, []);
 
   const [isGridLayout, setIsGridLayout] = useState(false);
 
   return (
     <>
-      <Navbar isGridLayout={isGridLayout} setIsGridLayout={setIsGridLayout} />
+      <Navbar isGridLayout={isGridLayout} setIsGridLayout={setIsGridLayout} userData={userData} />
       <div className="flex flex-col md:flex-row items-center justify-between px-4 md:px-[100px] my-[20px] md:my-[40px] gap-4">
         <h2 className="text-lg md:text-2xl text-center md:text-left">
           Hi 👋, {userData ? userData.username : ""}
@@ -117,8 +94,8 @@ const Home = () => {
             <input
               type="text"
               placeholder="Search Here...!"
-              value={searchQuery} // Bind search input to searchQuery state
-              onChange={(e) => setSearchQuery(e.target.value)} // Update searchQuery on input change
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full px-2 py-1 border rounded-md text-sm"
             />
           </div>

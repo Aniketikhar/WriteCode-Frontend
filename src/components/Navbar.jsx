@@ -1,48 +1,22 @@
-import React, { useEffect, useState } from "react";
-import logo from "../images/logo.png";
-import { Link, useNavigate } from "react-router-dom";
-import Avatar from "react-avatar";
-import { MdLightMode } from "react-icons/md";
+import React from "react";
+import { Link } from "react-router-dom";
 import { BsGridFill } from "react-icons/bs";
-import { api_base_url, toggleClass } from "../helper";
+import { toggleClass } from "../helper";
 import { CgProfile } from "react-icons/cg";
 import toonavatar from "cartoon-avatar";
+import api, { clearAuth } from "../api";
 
-const Navbar = ({ isGridLayout, setIsGridLayout }) => {
+const Navbar = ({ isGridLayout, setIsGridLayout, userData }) => {
   const profile = toonavatar.generate_avatar();
 
-  const navigate = useNavigate();
-
-  const [data, setData] = useState(null);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    fetch(api_base_url + "/api/auth/me", {
-      mode: "cors",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        userId: localStorage.getItem("userId"),
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setData(data.user);
-        } else {
-          setError(data.message);
-        }
-      });
-  }, []);
-
-  const logout = () => {
-    localStorage.removeItem("userId");
-    localStorage.removeItem("token");
-    localStorage.removeItem("isLoggedIn");
-    window.location.reload();
+  const logout = async () => {
+    try {
+      await api.post("/api/auth/logout");
+    } catch {
+      // Even if logout API fails, clear local state
+    }
+    clearAuth();
+    window.location.href = "/login";
   };
 
   return (
@@ -80,7 +54,7 @@ const Navbar = ({ isGridLayout, setIsGridLayout }) => {
             <p className="flex items-center gap-2 mt-3 mb-2 cursor-pointer">
               <CgProfile className="text-[18px] sm:text-[20px]" />{" "}
               <span className="text-sm sm:text-base">
-                {data ? data?.name : ""}
+                {userData ? userData.name : ""}
               </span>
             </p>
           </div>

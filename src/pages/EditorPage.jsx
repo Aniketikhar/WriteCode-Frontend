@@ -5,7 +5,7 @@ import { MdLightMode, MdOutlineMonitor } from "react-icons/md";
 import { AiOutlineExpandAlt } from "react-icons/ai";
 import { FiExternalLink, FiRefreshCw } from "react-icons/fi";
 import { VscDebugConsole, VscFiles, VscCode } from "react-icons/vsc";
-import { api_base_url } from "../helper";
+import api from "../api";
 import { useParams, useNavigate } from "react-router-dom";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
@@ -127,73 +127,56 @@ const EditorPage = () => {
 
   // Fetch current project code
   useEffect(() => {
-    fetch(api_base_url + "/api/projects/get", {
-      mode: "cors",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        userId: localStorage.getItem("userId"),
-        projId: projectID,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setHtmlCode(data.project.htmlCode);
-        setCssCode(data.project.cssCode);
-        setJsCode(data.project.jsCode);
-        setData(data.project);
-      });
+    const fetchProject = async () => {
+      try {
+        const res = await api.post("/api/projects/get", { projId: projectID });
+        const data = await res.json();
+        if (data.success) {
+          setHtmlCode(data.project.htmlCode);
+          setCssCode(data.project.cssCode);
+          setJsCode(data.project.jsCode);
+          setData(data.project);
+        }
+      } catch {
+        toast.error("Failed to load project");
+      }
+    };
+    fetchProject();
   }, [projectID]);
 
   // Fetch all projects for sidebar list
   useEffect(() => {
-    fetch(api_base_url + "/api/projects/all", {
-      mode: "cors",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        userId: localStorage.getItem("userId"),
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchProjects = async () => {
+      try {
+        const res = await api.post("/api/projects/all");
+        const data = await res.json();
         if (data.success) setProjects(data.projects);
-      });
+      } catch {
+        // Non-critical — sidebar just stays empty
+      }
+    };
+    fetchProjects();
   }, []);
 
   // ── Save ────────────────────────────────────────────────────────────────────
 
-  const saveProject = () => {
-    fetch(api_base_url + "/api/projects/update", {
-      mode: "cors",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        userId: localStorage.getItem("userId"),
+  const saveProject = async () => {
+    try {
+      const res = await api.post("/api/projects/update", {
         projId: projectID,
         htmlCode,
         cssCode,
         jsCode,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          toast.success("Project saved!");
-        } else {
-          toast.error("Something went wrong");
-        }
-      })
-      .catch(() => toast.error("Failed to save project. Please try again."));
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success("Project saved!");
+      } else {
+        toast.error("Something went wrong");
+      }
+    } catch {
+      toast.error("Failed to save project. Please try again.");
+    }
   };
 
   // Ctrl+S shortcut
