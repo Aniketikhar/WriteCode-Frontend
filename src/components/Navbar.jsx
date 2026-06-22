@@ -54,7 +54,7 @@ const Navbar = ({ isGridLayout, setIsGridLayout }) => {
           </h1>
         </div>
         <div className="links flex items-center gap-2">
-          <Link to={"https://port-folio-aniket-ikhar.vercel.app/"}>
+          <Link to={"https://port-folio-aniket-ikhar.vercel.app/"} target="_blank">
             <span className="italic text-sm sm:text-base hover:text-[#2764c0] cursor-pointer">
               About
             </span>
@@ -77,27 +77,22 @@ const Navbar = ({ isGridLayout, setIsGridLayout }) => {
         {/* Dropdown menu */}
         <div className="dropDownNavbar hidden absolute right-4 sm:right-[60px] top-[80px] shadow-lg shadow-black/50 p-[10px] rounded-lg bg-[#1A1919] w-[150px] h-auto">
           <div className="py-[10px] border-b border-[#fff]">
-            <i className="flex items-center gap-2 mt-3 mb-2 cursor-pointer">
+            <p className="flex items-center gap-2 mt-3 mb-2 cursor-pointer">
               <CgProfile className="text-[18px] sm:text-[20px]" />{" "}
               <span className="text-sm sm:text-base">
-                {data ? data.username : ""}
+                {data ? data?.name : ""}
               </span>
-            </i>
+            </p>
           </div>
-          <i
-            className="flex items-center gap-2 mt-3 mb-2 cursor-pointer"
-            style={{ fontStyle: "normal" }}
-          >
-            <MdLightMode className="text-[18px] sm:text-[20px]" /> Light mode
-          </i>
-          <i
+          
+          <p
             onClick={() => setIsGridLayout(!isGridLayout)}
             className="flex items-center gap-2 mt-3 mb-2 cursor-pointer"
             style={{ fontStyle: "normal" }}
           >
             <BsGridFill className="text-[18px] sm:text-[20px]" />{" "}
             {isGridLayout ? "List" : "Grid"} layout
-          </i>
+          </p>
           <button
             onClick={logout}
             className="rounded border border-[#eb1e1e] min-w-[120px] p-2 hover:bg-red-600 text-sm sm:text-base"

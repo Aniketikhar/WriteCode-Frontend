@@ -43,7 +43,7 @@ const Home = () => {
             setIsCreateModelShow(false);
             setProjTitle("");
             toast.success("Project created successfully!");
-            navigate(`/editior/${data.projectId}`);
+            navigate(`/editor/${data.projectId}`);
           } else {
             toast.error("Something went wrong");
           }

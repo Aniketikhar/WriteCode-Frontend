@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import EditiorNavbar from "../components/EditiorNavbar";
+import EditiorNavbar from "../components/EditorNavbar";
 import Editor from "@monaco-editor/react";
 import { MdLightMode, MdOutlineMonitor } from "react-icons/md";
 import { AiOutlineExpandAlt } from "react-icons/ai";
@@ -42,7 +42,7 @@ const LOG_STYLE = {
   error: { text: "text-red-400",    icon: "✖",  bg: "bg-red-950/30",        iconCls: "text-red-500"    },
 };
 
-const Editior = () => {
+const EditorPage = () => {
   const [tab, setTab]               = useState("html");
   const [isLightMode, setIsLightMode] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -338,13 +338,13 @@ const Editior = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <button
+              {/* <button
                 className="text-[20px] cursor-pointer text-gray-400 hover:text-white transition-colors"
                 onClick={changeTheme}
                 title="Toggle light/dark theme"
               >
                 <MdLightMode />
-              </button>
+              </button> */}
               <button
                 className="text-[20px] cursor-pointer text-gray-400 hover:text-white transition-colors"
                 title={isExpanded ? "Collapse editor" : "Expand editor"}
@@ -500,4 +500,4 @@ const Editior = () => {
   );
 };
 
-export default Editior;
+export default EditorPage;
